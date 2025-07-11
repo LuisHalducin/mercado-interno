@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>TRINITYX | Alianza en Sim Companies</title>
+  <meta name="description" content="Página oficial de TRINITYX, alianza de jugadores en Sim Companies. Explora órdenes de venta y compra entre miembros.">
+  <meta name="keywords" content="Sim Companies, alianza, TRINITYX, mercado interno, órdenes de compra, órdenes de venta, simulación económica, juego empresarial">
+  <meta name="author" content="Alianza TRINITYX">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Icono -->
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style_principal.css') }}">
+
+  <!-- Open Graph para compartir en redes -->
+  <meta property="og:title" content="TRINITYX - Alianza en Sim Companies">
+  <meta property="og:description" content="Únete al mercado interno y comunidad de la alianza TRINITYX en Sim Companies.">
+  <meta property="og:image" content="{{ url_for('static', filename='img/logo_dc.webp') }}">
+  <meta property="og:type" content="website">
+</head>
+<body>
+
+  <header>
+    <h1>TRINITYX</h1>
+    <p>Alianza de jugadores en Sim Companies</p>
+  </header>
+
+  <section class="mensaje-bienvenida" aria-label="Mensaje de bienvenida">
+    <span id="acceso-texto"></span>
+  </section>
+
+  <main class="contenedor">
+    <div class="imagen-central">
+      <img src="{{ url_for('static', filename='img/logo_dc.webp') }}" alt="Logo de TRINITYX reluciente" />
+    </div>
+
+    <section class="tarjetas-opciones" aria-label="Accesos rápidos">
+      <a href="{{ url_for('ventas') }}" class="tarjeta-opcion">
+        <h2>Órdenes de Venta</h2>
+        <p>Explora los productos disponibles</p>
+      </a>
+
+      <a href="{{ url_for('compras') }}" class="tarjeta-opcion">
+        <h2>Órdenes de Compra</h2>
+        <p>Descubre lo que otros están buscando</p>
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Alianza TRINITYX - Sim Companies</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/efectos.js') }}"></script>
+</body>
+</html>

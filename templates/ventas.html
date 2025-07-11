@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ordenes de Venta</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style_listado.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
+  <h1>Ordenes de Venta</h1>
+  <a href="{{ url_for('venta') }}"><button>Publicar una venta</button></a>
+
+  <input type="text" id="busqueda" placeholder="Buscar producto..." class="barra-busqueda">
+  <div class="listado">
+  {% for venta in ventas %}
+    <div class="tarjeta" data-producto="{{ venta.producto | lower }}">
+      <img src="{{ url_for('static', filename='img/' + venta.producto + '.jpg') }}" alt="{{ venta.producto }}">
+      {% if session['usuario'] == venta.vendedor %}
+          <form action="{{ url_for('eliminar_venta', index=loop.index0) }}" method="post">
+            <button type="submit" class="eliminar-btn">Eliminar</button>
+          </form>
+        {% endif %}
+      <div class="info">
+        <p><strong>Vendedor:</strong> {{ venta.vendedor }}</p>
+        <p><strong>Producto:</strong> {{ venta.producto }}</p>
+        <p><strong>Calidad:</strong> {{ venta.calidad }}</p>
+        <p><strong>Cantidad:</strong> {{ venta.cantidad }}</p>
+        <p><strong>Precio:</strong> ${{ venta.precio }}</p>
+        <a href="{{ venta.contacto }}" target="_blank" class="btn-contactar">Contactar</a>
+      </div>
+    </div>
+  {% else %}
+    <p>No hay ofertas de venta publicadas aún.</p>
+  {% endfor %}
+</div>
+
+
+  <a href="{{ url_for('principal') }}">Volver al inicio</a>
+
+  <script src="{{ url_for('static', filename='js/filtro_busqueda.js') }}"></script>
+  <!-- Contenedor modal oculto -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span id="cerrar-modal" class="cerrar">&times;</span>
+    <div id="modal-detalle"></div>
+  </div>
+</div>
+
+</body>
+</html>

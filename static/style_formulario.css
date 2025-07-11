@@ -1,0 +1,152 @@
+/* style_formulario.css */
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #1e1e2f; /* fondo oscuro */
+  color: #eee;
+  padding: 30px 20px;
+  margin: 0;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  color: #a0d468; /* verde suave */
+  text-shadow: 0 0 6px #a0d468aa;
+}
+
+p {
+  font-size: 1.1em;
+  margin-bottom: 30px;
+  color: #ccc;
+}
+
+/* Mensajes de error */
+.mensaje-error {
+  background-color: #f44336cc; /* rojo con transparencia */
+  color: white;
+  padding: 12px 20px;
+  margin-bottom: 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  max-width: 450px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Formulario */
+form {
+  max-width: 450px;
+  margin: 0 auto;
+  background: #2a2a3d;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+  text-align: left;
+}
+
+/* Cada grupo del formulario */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Labels */
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #a0d468;
+  text-shadow: 0 0 4px #a0d468aa;
+}
+
+/* Inputs y selects */
+input[type="number"],
+input[type="url"],
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background-color: #1e1e2f;
+  color: #eee;
+  font-size: 1em;
+  transition: border-color 0.3s ease;
+}
+
+input[type="number"]::placeholder,
+input[type="url"]::placeholder {
+  color: #888;
+}
+
+input[type="number"]:focus,
+input[type="url"]:focus,
+select:focus {
+  outline: none;
+  border-color: #a0d468;
+  box-shadow: 0 0 8px #a0d468aa;
+}
+
+/* Botones */
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+button[type="submit"] {
+  flex-grow: 1;
+  background-color: #4caf50;
+  color: white;
+  font-size: 1.1em;
+  padding: 12px 0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #388e3c;
+}
+
+/* Cancelar como enlace estilo botón */
+.btn-cancel {
+  flex-grow: 1;
+  background-color: #a0d468;
+  color: #1e1e2f;
+  text-align: center;
+  padding: 12px 0;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cancel:hover {
+  background-color: #8bb84a;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  body {
+    padding: 20px 10px;
+  }
+
+  form {
+    padding: 20px 20px;
+  }
+
+  button[type="submit"],
+  .btn-cancel {
+    font-size: 1em;
+    padding: 10px 0;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

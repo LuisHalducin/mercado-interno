@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Solicitudes de Compra</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style_listado.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <h1>Solicitudes de Compra</h1>
+  <a href="{{ url_for('compra') }}"><button>Publicar una compra</button></a>
+
+  <input type="text" id="busqueda" placeholder="Buscar producto..." class="barra-busqueda">
+
+  <div class="listado">
+    {% for compra in compras %}
+      <div class="tarjeta">
+        <img src="{{ url_for('static', filename='img/' + compra.producto + '.jpg') }}" alt="{{ compra.producto }}">
+        {% if session['usuario'] == compra.comprador %}
+            <form action="{{ url_for('eliminar_compra', index=loop.index0) }}" method="post">
+              <button type="submit" class="eliminar-btn">Eliminar</button>
+            </form>
+          {% endif %}
+        <div class="info">
+          <p><strong>Comprador:</strong> {{ compra.comprador }}</p>
+          <p><strong>Producto:</strong> {{ compra.producto }}</p>
+          <p><strong>Calidad:</strong> {{ compra.calidad }}</p>
+          <p><strong>Cantidad:</strong> {{ compra.cantidad }}</p>
+          <a href="{{ compra.contacto }}" target="_blank" class="btn-contactar">Contactar</a>
+
+        </div>
+      </div>
+    {% else %}
+      <p>No hay solicitudes de compra publicadas aún.</p>
+    {% endfor %}
+  </div>
+
+  <a href="{{ url_for('principal') }}">Volver al inicio</a>
+
+  <script src="{{ url_for('static', filename='js/filtro_busqueda.js') }}"></script>
+  <!-- Contenedor modal oculto -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span id="cerrar-modal" class="cerrar">&times;</span>
+    <div id="modal-detalle"></div>
+  </div>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,21 @@
+{
+    "ventas": [
+        {
+            "vendedor": "flexi mx",
+            "producto": "juego1",
+            "calidad": "Q2",
+            "cantidad": 30,
+            "precio": 400.0,
+            "contacto": "https://www.simcompanies.com/es/company/1/ITESM/"
+        }
+    ],
+    "compras": [
+        {
+            "comprador": "flexi mx",
+            "producto": "juego1",
+            "calidad": "Q5",
+            "cantidad": 5000,
+            "contacto": ""
+        }
+    ]
+}

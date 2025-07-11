@@ -1,0 +1,143 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1e1e2f;
+    color: #f0f0f0;
+    text-align: center;
+    padding: 40px;
+}
+
+
+.tarjetas-opciones {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.tarjeta-opcion {
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+    max-width: 300px;
+    text-align: center;
+}
+
+.tarjeta-opcion:hover {
+    background: #34495e;
+}
+
+.tarjeta-opcion h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.tarjeta-opcion p {
+    font-size: 1em;
+}
+
+.mensaje-bienvenida {
+  font-family: 'Courier New', monospace;
+  font-size: 18px;
+  color: #39ff14; /* verde tipo terminal */
+  text-align: center;
+  margin-bottom: 20px;
+  height: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.cursor {
+  display: inline-block;
+  background-color: #39ff14;
+  width: 10px;
+  height: 18px;
+  margin-left: 4px;
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
+}
+
+.imagen-central {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    margin: 30px 0;
+    overflow: hidden;
+}
+
+.imagen-central img {
+    display: block;
+    max-width: 500px;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+}
+
+.imagen-central::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.6) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: skewX(-25deg);
+    animation: shimmer 3s forwards; /* sólo 1 vez */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes shimmer {
+    0% {
+        left: -75%;
+    }
+    100% {
+        left: 125%;
+    }
+}
+@media (max-width: 768px) {
+  body {
+    padding: 20px;
+  }
+
+  .tarjetas-opciones {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .tarjeta-opcion {
+    width: 90%;
+    max-width: none;
+  }
+
+  .tarjeta-opcion h2 {
+    font-size: 1.2em;
+  }
+
+  .tarjeta-opcion p {
+    font-size: 0.95em;
+  }
+
+  .mensaje-bienvenida {
+    font-size: 16px;
+  }
+
+  .imagen-central img {
+    max-width: 90vw;
+  }
+}

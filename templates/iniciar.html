@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Iniciar sesión</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #1e1e2f;
+      color: #eee;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      justify-content: center;
+      text-align: center;
+    }
+
+    h1 {
+      color: #a0d468;
+      text-shadow: 0 0 6px #a0d468aa;
+      margin-bottom: 10px;
+      font-size: 2.5em;
+    }
+
+    .info-text {
+      max-width: 400px;
+      color: #bbb;
+      margin-bottom: 30px;
+      font-size: 1.1em;
+      line-height: 1.4;
+    }
+
+    form {
+      background-color: #2a2a3d;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 6px;
+      border: 1px solid #555;
+      background-color: #1e1e2f;
+      color: #eee;
+      font-size: 1.1em;
+      margin-bottom: 25px;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]::placeholder {
+      color: #888;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #a0d468;
+      box-shadow: 0 0 8px #a0d468aa;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px 0;
+      background-color: #4caf50;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.2em;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #388e3c;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 30px 15px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      .info-text {
+        font-size: 1em;
+        max-width: 90vw;
+      }
+
+      form {
+        padding: 25px 20px;
+      }
+
+      input[type="text"] {
+        font-size: 1em;
+      }
+
+      button {
+        font-size: 1em;
+        padding: 12px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Iniciar sesión</h1>
+  <p class="info-text">
+    Para publicar una orden de compra o venta, introduce tu nombre de usuario del juego. Esto permitirá identificarte en el mercado y gestionar tus publicaciones fácilmente.
+  </p>
+  <form method="POST" novalidate>
+    <input type="text" name="nombre" placeholder="Nombre de jugador" required autocomplete="off" />
+    <button type="submit">Entrar</button>
+  </form>
+</body>
+</html>
