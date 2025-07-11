@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Proximamente - TRINITYX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style_principal.css') }}">
+</head>
+<!-- Barra de pestañas -->
+  <nav class="barra-pestanas">
+    <ul>
+      <li><a href="{{ url_for('principal') }}">Inicio</a></li>
+      <li><a href="{{ url_for('blog') }}">Mini blog</a></li>
+      <li><a href="{{ url_for('herramientas') }}">Herramientas</a></li>
+      <li><a href="{{ url_for('gobierno') }}">Pedidos de Gobierno</a></li>
+      <li><a href="{{ url_for('proximamente') }}">Próximamente</a></li>
+    </ul>
+  </nav>
+
+<body>
+
+  <header>
+    <h1>TRINITYX</h1>
+    <p>Alianza de jugadores en Sim Companies</p>
+  </header>
+
+  
+  <main class="contenedor">
+    <section class="mensaje-en-construccion">
+      <h2>🛠️ Sección en construcción</h2>
+      <p>Seguimos trabajando para traerte esta función pronto.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Alianza TRINITYX - Sim Companies</p>
+  </footer>
+
+</body>
+</html>

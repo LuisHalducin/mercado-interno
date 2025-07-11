@@ -2,9 +2,15 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 import json
 import os
 import threading
+from datetime import timedelta
 
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_segura'  # Necesaria para usar sesiones
+app.permanent_session_lifetime = timedelta(days=7)  # o más si deseas
+
+@app.before_request
+def mantener_sesion():
+    session.permanent = True
 
 DATA_FILE = 'datos.json'
 datos_lock = threading.Lock()
@@ -154,6 +160,24 @@ def eliminar_compra(index):
             del data["compras"][index]
             guardar_datos(data)
     return redirect(url_for('compras'))
+
+
+@app.route('/blog')
+def blog():
+    return render_template('blog.html')
+
+@app.route('/herramientas')
+def herramientas():
+    return render_template('herramientas.html')
+
+@app.route('/gobierno')
+def gobierno():
+    return render_template('gobierno.html')
+
+@app.route('/proximamente')
+def proximamente():
+    return render_template('proximamente.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

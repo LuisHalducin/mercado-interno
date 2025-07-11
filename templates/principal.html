@@ -21,6 +21,15 @@
   <meta property="og:type" content="website">
   <meta name="google-site-verification" content="6zS2GXqkvCA1H-l3E2H1ZSu9kvmpQMNC99QtlB9Do2c" />
 </head>
+<nav class="barra-pestanas">
+  <ul>
+    <li><a href="{{ url_for('blog') }}">Mini blog</a></li>
+    <li><a href="{{ url_for('herramientas') }}">Herramientas</a></li>
+    <li><a href="{{ url_for('gobierno') }}">Pedidos de Gobierno</a></li>
+    <li><a href="{{ url_for('proximamente') }}">Próximamente</a></li>
+  </ul>
+</nav>
+
 <body>
 
   <header>
@@ -36,19 +45,33 @@
     <div class="imagen-central">
       <img src="{{ url_for('static', filename='img/logo_dc.webp') }}" alt="Logo de TRINITYX reluciente" />
     </div>
+ 
 
-    <section class="tarjetas-opciones" aria-label="Accesos rápidos">
+  </main>
+
+  <section class="bloque-servidor">
+  <div class="tabs">
+    <button class="tab-button active" onclick="openTab(event, 'emprendedor')">Emprendedor</button>
+    <button class="tab-button" onclick="openTab(event, 'magnate')">Magnate</button>
+  </div>
+  
+  <div id="emprendedor" class="tab-content" style="display: block;">
+    <div class="tarjetas-opciones">
       <a href="{{ url_for('ventas') }}" class="tarjeta-opcion">
-        <h2>Órdenes de Venta</h2>
+        <h3>Órdenes de Venta</h3>
         <p>Explora los productos disponibles</p>
-      </a>
-
+    </a>
       <a href="{{ url_for('compras') }}" class="tarjeta-opcion">
-        <h2>Órdenes de Compra</h2>
+        <h3>Órdenes de Compra</h3>
         <p>Descubre lo que otros están buscando</p>
       </a>
-    </section>
-  </main>
+    </div>
+  </div>
+  
+  <div id="magnate" class="tab-content" style="display: none;">
+    <p>Próximamente contenido para servidor Magnate.</p>
+  </div>
+</section>
 
   <footer>
     <p>&copy; 2025 Alianza TRINITYX - Sim Companies</p>
