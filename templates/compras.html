@@ -26,7 +26,7 @@
           <p><strong>Producto:</strong> {{ compra.producto }}</p>
           <p><strong>Calidad:</strong> {{ compra.calidad }}</p>
           <p><strong>Cantidad:</strong> {{ compra.cantidad }}</p>
-          <a href="{{ compra.contacto }}" target="_blank" class="btn-contactar">Contactar</a>
+          <a href="{{ url_for('redirigir_discord') }}?url=https://discord.gg/TZrcbtbk" target="_blank" class="btn-contactar">Contactar</a>
 
         </div>
       </div>

@@ -125,9 +125,8 @@ def compra():
         producto = request.form.get('producto', '').strip()
         calidad = request.form.get('calidad', '').strip()
         cantidad = request.form.get('cantidad', '').strip()
-        contacto = request.form.get('contacto', '').strip()
 
-        if not producto or not calidad or not cantidad or not contacto:
+        if not producto or not calidad or not cantidad:
             flash("Todos los campos son obligatorios.")
             return render_template('compra.html')
 
@@ -141,8 +140,7 @@ def compra():
             "comprador": session['usuario'],
             "producto": producto,
             "calidad": calidad,
-            "cantidad": cantidad,
-            "contacto": contacto
+            "cantidad": cantidad
         }
 
         data = cargar_datos()
