@@ -177,6 +177,46 @@ body {
   .imagen-central img {
     max-width: 90vw;
   }
+
+  /* 🔽 NUEVO: barra-pestanas responsiva */
+  /* Permitir scroll horizontal en pantallas pequeñas */
+.barra-pestanas {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+/* Asegurarse de que los <ul> no se salgan */
+.barra-pestanas ul {
+    display: inline-flex;
+    padding: 0 10px;
+    min-width: max-content;
+}
+
+/* Ajustar los <li> para que no se encojan ni se escondan */
+.barra-pestanas li {
+    flex: 0 0 auto;
+}
+
+
+  /* 🔽 NUEVO: pestañas de contenido responsivo */
+  .tabs {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tab-button {
+    width: 90%;
+    font-size: 1em;
+  }
+
+  .bloque-servidor {
+    margin: 20px auto;
+    padding: 20px;
+  }
+
+  .tab-content {
+    padding: 20px;
+  }
 }
 
 .bloque-servidor {

@@ -8,9 +8,6 @@ app = Flask(__name__)
 app.secret_key = 'clave_secreta_segura'  # Necesaria para usar sesiones
 app.permanent_session_lifetime = timedelta(days=7)  # o más si deseas
 
-@app.before_request
-def mantener_sesion():
-    session.permanent = True
 
 DATA_FILE = 'datos.json'
 datos_lock = threading.Lock()
@@ -33,6 +30,13 @@ def guardar_datos(data):
             json.dump(data, f, indent=4)
         datos_cache = data
 
+@app.before_request
+def requerir_login():
+    session.permanent = True  # Mantiene la sesión activa según timedelta
+    rutas_libres = ['iniciar', 'static']  # Páginas que no requieren login
+    if 'usuario' not in session and request.endpoint not in rutas_libres:
+        return redirect(url_for('iniciar'))
+
 @app.route('/')
 def principal():
     return render_template('principal.html')
@@ -44,7 +48,7 @@ def iniciar():
         nombre = request.form.get('nombre')
         if nombre:
             session['usuario'] = nombre
-            return redirect(url_for('ventas'))
+            return redirect(url_for('principal'))
     return render_template('iniciar.html')
 
 @app.route('/cerrar')
