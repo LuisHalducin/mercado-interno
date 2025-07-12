@@ -14,7 +14,7 @@
 
   <div class="listado">
     {% for compra in compras %}
-      <div class="tarjeta" data-producto="{{ venta.producto | lower }}">
+      <div class="tarjeta" data-producto="{{ compra.producto | lower }}">
         <img src="{{ url_for('static', filename='img/' + compra.producto + '.webp') }}" alt="{{ compra.producto }}">
         {% if session['usuario'] == compra.comprador %}
             <form action="{{ url_for('eliminar_compra', index=loop.index0) }}" method="post">
