@@ -1,4 +1,12 @@
 {
-    "ventas": [],
+    "ventas": [
+        {
+            "vendedor": "flexi mx",
+            "producto": "Agua",
+            "calidad": "Q3",
+            "cantidad": 4000,
+            "precio": 200.0
+        }
+    ],
     "compras": []
 }

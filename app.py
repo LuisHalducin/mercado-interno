@@ -71,9 +71,8 @@ def venta():
         calidad = request.form.get('calidad', '').strip()
         cantidad = request.form.get('cantidad', '').strip()
         precio = request.form.get('precio', '').strip()
-        contacto = request.form.get('contacto', '').strip()
 
-        if not producto or not calidad or not cantidad or not precio or not contacto:
+        if not producto or not calidad or not cantidad or not precio:
             flash("Todos los campos son obligatorios.")
             return render_template('venta.html')
 
@@ -89,8 +88,7 @@ def venta():
             "producto": producto,
             "calidad": calidad,
             "cantidad": cantidad,
-            "precio": precio,
-            "contacto": contacto
+            "precio": precio
         }
 
         data = cargar_datos()
@@ -181,6 +179,76 @@ def gobierno():
 @app.route('/proximamente')
 def proximamente():
     return render_template('proximamente.html')
+
+@app.route('/redirigir_discord')
+def redirigir_discord():
+    url_web = request.args.get('url')
+    if not url_web:
+        return "URL no proporcionada", 400
+
+    # Convierte el enlace a intento de abrir la app de Discord
+    url_app = url_web.replace("https://", "discord://")
+
+    html = f"""
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Redirigiendo a Discord...</title>
+      <style>
+        body {{
+          background-color: #1e1e2f;
+          color: #f0f0f0;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+          text-align: center;
+        }}
+        h1 {{
+          font-size: 2em;
+          margin-bottom: 20px;
+          color: #00bcd4;
+        }}
+        p {{
+          font-size: 1.1em;
+        }}
+        a {{
+          color: #00bcd4;
+          text-decoration: none;
+          margin-top: 10px;
+          padding: 10px 20px;
+          background-color: #2c3e50;
+          border-radius: 8px;
+          display: inline-block;
+          transition: background 0.3s ease;
+        }}
+        a:hover {{
+          background-color: #34495e;
+        }}
+      </style>
+      <script>
+        function openDiscord() {{
+          window.location = "{url_app}";
+          setTimeout(function() {{
+            window.location = "{url_web}";
+          }}, 2000);
+        }}
+        window.onload = openDiscord;
+      </script>
+    </head>
+    <body>
+      <h1>Redirigiendo a Discord...</h1>
+      <p>Intentando abrir la aplicación. Si no funciona, haz clic abajo:</p>
+      <a href="{url_web}">Ir al canal en Discord</a>
+    </body>
+    </html>
+    """
+    return html
 
 
 if __name__ == '__main__':
