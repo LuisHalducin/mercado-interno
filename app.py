@@ -1,34 +1,29 @@
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+from pymongo import MongoClient
+
+MONGO_URI = os.getenv("MONGO_URI")
+client = MongoClient(MONGO_URI)
+db = client['mi_base_de_datos']  # Puedes llamarla como quieras
+
+# Ejemplo: colección de ventas
+ventas_collection = db['ventas']
+compras_collection = db['compras']
+usuarios_collection = db['usuarios']
+
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import json
-import os
 import threading
 from datetime import timedelta
+from bson import ObjectId
 
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_segura'  # Necesaria para usar sesiones
 app.permanent_session_lifetime = timedelta(days=7)  # o más si deseas
 
-
-DATA_FILE = 'datos.json'
-datos_lock = threading.Lock()
-datos_cache = None
-
-def cargar_datos():
-    global datos_cache
-    if datos_cache is None:
-        if not os.path.exists(DATA_FILE):
-            with open(DATA_FILE, 'w') as f:
-                json.dump({"ventas": [], "compras": []}, f)
-        with open(DATA_FILE, 'r') as f:
-            datos_cache = json.load(f)
-    return datos_cache
-
-def guardar_datos(data):
-    global datos_cache
-    with datos_lock:
-        with open(DATA_FILE, 'w') as f:
-            json.dump(data, f, indent=4)
-        datos_cache = data
 
 @app.before_request
 def requerir_login():
@@ -41,14 +36,24 @@ def requerir_login():
 def principal():
     return render_template('principal.html')
 
-# ---------- INICIO Y CIERRE DE SESIÓN ----------
 @app.route('/iniciar', methods=['GET', 'POST'])
 def iniciar():
     if request.method == 'POST':
-        nombre = request.form.get('nombre')
-        if nombre:
+        nombre = request.form.get('nombre', '').strip()
+        contraseña = request.form.get('contraseña', '').strip()
+
+        if not nombre or not contraseña:
+            flash("Todos los campos son obligatorios.")
+            return render_template('iniciar.html')
+
+        usuario = usuarios_collection.find_one({"nombre": nombre})
+        if usuario and check_password_hash(usuario['contraseña'], contraseña):
             session['usuario'] = nombre
             return redirect(url_for('principal'))
+        else:
+            flash("Nombre o contraseña incorrectos.")
+            return render_template('iniciar.html')
+
     return render_template('iniciar.html')
 
 @app.route('/cerrar')
@@ -56,10 +61,45 @@ def cerrar():
     session.clear()
     return redirect(url_for('iniciar'))
 
+
+# ---------- REGISTRO ----------
+@app.route('/registro', methods=['GET', 'POST'])
+def registro():
+    if request.method == 'POST':
+        nombre = request.form.get('nombre', '').strip()
+        contraseña = request.form.get('contraseña', '').strip()
+        contraseña2 = request.form.get('contraseña2', '').strip()
+
+        if not nombre or not contraseña or not contraseña2:
+            flash("Todos los campos son obligatorios.")
+            return render_template('registro.html')
+
+        if contraseña != contraseña2:
+            flash("Las contraseñas no coinciden.")
+            return render_template('registro.html')
+
+        # Verifica si ya existe un usuario con ese nombre
+        if db.usuarios.find_one({"nombre": nombre}):
+            flash("El nombre ya está en uso. Intenta otro.")
+            return render_template('registro.html')
+
+        # Encripta la contraseña y guarda el nuevo usuario
+        contraseña_hash = generate_password_hash(contraseña)
+        db.usuarios.insert_one({
+            "nombre": nombre,
+            "contraseña": contraseña_hash
+        })
+
+        flash("Cuenta creada con éxito. Ahora inicia sesión.")
+        return redirect(url_for('iniciar'))
+
+    return render_template('registro.html')
+
+
 @app.route('/ventas')
 def ventas():
-    data = cargar_datos()
-    return render_template('ventas.html', ventas=data["ventas"])
+    ventas = list(ventas_collection.find())  # obtiene las ventas desde MongoDB
+    return render_template('ventas.html', ventas=ventas)
 
 @app.route('/venta', methods=['GET', 'POST'])
 def venta():
@@ -91,30 +131,26 @@ def venta():
             "precio": precio
         }
 
-        data = cargar_datos()
-        data["ventas"].append(nueva_venta)
-        guardar_datos(data)
+        ventas_collection.insert_one(nueva_venta)  # guarda en MongoDB
         return redirect(url_for('ventas'))
 
     return render_template('venta.html')
 
-@app.route('/eliminar_venta/<int:index>', methods=['POST'])
-def eliminar_venta(index):
+
+@app.route('/eliminar_venta/<id>', methods=['POST'])
+def eliminar_venta(id):
     if 'usuario' not in session:
         return redirect(url_for('iniciar'))
 
-    data = cargar_datos()
-    if 0 <= index < len(data["ventas"]):
-        if data["ventas"][index]["vendedor"] == session['usuario']:
-            del data["ventas"][index]
-            guardar_datos(data)
+    venta = ventas_collection.find_one({"_id": ObjectId(id)})
+    if venta and venta['vendedor'] == session['usuario']:
+        ventas_collection.delete_one({"_id": ObjectId(id)})
     return redirect(url_for('ventas'))
 
-# ---------- COMPRAS ----------
 @app.route('/compras')
 def compras():
-    data = cargar_datos()
-    return render_template('compras.html', compras=data["compras"])
+    compras = list(compras_collection.find())
+    return render_template('compras.html', compras=compras)
 
 @app.route('/compra', methods=['GET', 'POST'])
 def compra():
@@ -143,22 +179,20 @@ def compra():
             "cantidad": cantidad
         }
 
-        data = cargar_datos()
-        data["compras"].append(nueva_compra)
-        guardar_datos(data)
+        compras_collection.insert_one(nueva_compra)
         return redirect(url_for('compras'))
+
     return render_template('compra.html')
 
-@app.route('/eliminar_compra/<int:index>', methods=['POST'])
-def eliminar_compra(index):
+@app.route('/eliminar_compra/<compra_id>', methods=['POST'])
+def eliminar_compra(compra_id):
     if 'usuario' not in session:
         return redirect(url_for('iniciar'))
 
-    data = cargar_datos()
-    if 0 <= index < len(data["compras"]):
-        if data["compras"][index]["comprador"] == session['usuario']:
-            del data["compras"][index]
-            guardar_datos(data)
+    compra = compras_collection.find_one({"_id": ObjectId(compra_id)})
+    if compra and compra['comprador'] == session['usuario']:
+        compras_collection.delete_one({"_id": ObjectId(compra_id)})
+
     return redirect(url_for('compras'))
 
 

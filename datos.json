@@ -1,11 +1,4 @@
 {
     "ventas": [],
-    "compras": [
-        {
-            "comprador": "flexi mx",
-            "producto": "Algodon",
-            "calidad": "Q2",
-            "cantidad": 23
-        }
-    ]
+    "compras": []
 }

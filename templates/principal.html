@@ -22,6 +22,17 @@
   <meta name="google-site-verification" content="6zS2GXqkvCA1H-l3E2H1ZSu9kvmpQMNC99QtlB9Do2c" />
 </head>
 <body>
+    {% if session['usuario'] %}
+  <div style="position: absolute; top: 10px; right: 15px; color: #a0d468; font-weight: bold;">
+    {{ session['usuario'] }} |
+    <a href="{{ url_for('cerrar') }}" style="color: #f06292; text-decoration: none;">Cerrar sesión</a>
+  </div>
+{% else %}
+  <div style="position: absolute; top: 10px; right: 15px;">
+    <a href="{{ url_for('iniciar') }}" style="color: #a0d468; font-weight: bold; margin-right: 10px;">Iniciar sesión</a>
+    <a href="{{ url_for('registro') }}" style="color: #a0d468; font-weight: bold;">Registrarse</a>
+  </div>
+{% endif %}
 
     <nav class="barra-pestanas">
   <ul>

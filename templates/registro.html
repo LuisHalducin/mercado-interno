@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Iniciar sesión</title>
+  <title>Registro de usuario</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
@@ -84,7 +84,7 @@
       font-weight: 700;
     }
 
-    .registro-link {
+    .login-link {
       margin-top: 20px;
       color: #a0d468;
       text-decoration: none;
@@ -92,13 +92,13 @@
       display: inline-block;
     }
 
-    .registro-link:hover {
+    .login-link:hover {
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <h1>Iniciar sesión</h1>
+  <h1>Registro de usuario</h1>
 
   {% with mensajes = get_flashed_messages() %}
     {% if mensajes %}
@@ -113,9 +113,10 @@
   <form method="POST" novalidate>
     <input type="text" name="nombre" placeholder="Nombre de la compañia" required autocomplete="off" />
     <input type="password" name="contraseña" placeholder="Contraseña" required autocomplete="off" />
-    <button type="submit">Entrar</button>
+    <input type="password" name="contraseña2" placeholder="Confirmar contraseña" required autocomplete="off" />
+    <button type="submit">Registrarse</button>
   </form>
 
-  <a href="{{ url_for('registro') }}" class="registro-link">¿No tienes cuenta? Regístrate aquí</a>
+  <a href="{{ url_for('iniciar') }}" class="login-link">¿Ya tienes cuenta? Inicia sesión aquí</a>
 </body>
 </html>
