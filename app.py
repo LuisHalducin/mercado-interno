@@ -1,11 +1,23 @@
 import os
 from dotenv import load_dotenv
+import sys
+
 load_dotenv()
+
+print("MONGO_URI:", os.getenv("MONGO_URI"))
 
 from pymongo import MongoClient
 
 MONGO_URI = os.getenv("MONGO_URI")
-client = MongoClient(MONGO_URI)
+
+try:
+    client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+    client.server_info()  # Forzar conexión y verificar
+    print("Conexión a MongoDB exitosa")
+except Exception as e:
+    print("Error al conectar a MongoDB:", e)
+    sys.exit("No se pudo conectar a la base de datos. Abortando la aplicación.")
+
 db = client['mi_base_de_datos']  # Puedes llamarla como quieras
 
 # Ejemplo: colección de ventas
@@ -23,6 +35,9 @@ from bson import ObjectId
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_segura'  # Necesaria para usar sesiones
 app.permanent_session_lifetime = timedelta(days=7)  # o más si deseas
+
+# Aquí continúa tu código Flask con rutas y lógica
+
 
 
 @app.before_request
