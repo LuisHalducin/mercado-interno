@@ -43,7 +43,7 @@ app.permanent_session_lifetime = timedelta(days=7)  # o más si deseas
 @app.before_request
 def requerir_login():
     session.permanent = True  # Mantiene la sesión activa según timedelta
-    rutas_libres = ['iniciar', 'static']  # Páginas que no requieren login
+    rutas_libres = ['iniciar', 'static', 'registro']  # Páginas que no requieren login
     if 'usuario' not in session and request.endpoint not in rutas_libres:
         return redirect(url_for('iniciar'))
 
