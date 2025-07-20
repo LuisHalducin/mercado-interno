@@ -12,7 +12,7 @@
   <p>Comprador: <strong>{{ session['usuario'] }}</strong></p>
 
   <form method="POST" novalidate>
-
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="comprador" value="{{ session['usuario'] }}" />
 
     <div class="form-group">

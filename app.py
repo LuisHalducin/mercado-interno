@@ -4,26 +4,26 @@ import sys
 
 load_dotenv()
 
-print("MONGO_URI:", os.getenv("MONGO_URI"))
-
 from pymongo import MongoClient
 
 MONGO_URI = os.getenv("MONGO_URI")
 
 try:
     client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
-    client.server_info()  # Forzar conexión y verificar
+    client.server_info()  
     print("Conexión a MongoDB exitosa")
 except Exception as e:
     print("Error al conectar a MongoDB:", e)
     sys.exit("No se pudo conectar a la base de datos. Abortando la aplicación.")
 
-db = client['mi_base_de_datos']  # Puedes llamarla como quieras
+db = client['mi_base_de_datos'] 
 
-# Ejemplo: colección de ventas
+
 ventas_collection = db['ventas']
 compras_collection = db['compras']
 usuarios_collection = db['usuarios']
+articulos_collection = db['articulos']
+
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, render_template, request, redirect, url_for, session, flash
@@ -31,19 +31,18 @@ import json
 import threading
 from datetime import timedelta
 from bson import ObjectId
+from flask_wtf import CSRFProtect
 
 app = Flask(__name__)
-app.secret_key = 'clave_secreta_segura'  # Necesaria para usar sesiones
-app.permanent_session_lifetime = timedelta(days=7)  # o más si deseas
-
-# Aquí continúa tu código Flask con rutas y lógica
-
+csrf = CSRFProtect(app)
+app.secret_key = os.getenv("SECRET_KEY")
+app.permanent_session_lifetime = timedelta(days=7) 
 
 
 @app.before_request
 def requerir_login():
-    session.permanent = True  # Mantiene la sesión activa según timedelta
-    rutas_libres = ['iniciar', 'static', 'registro']  # Páginas que no requieren login
+    session.permanent = True  
+    rutas_libres = ['iniciar', 'static', 'registro']  
     if 'usuario' not in session and request.endpoint not in rutas_libres:
         return redirect(url_for('iniciar'))
 
@@ -213,7 +212,71 @@ def eliminar_compra(compra_id):
 
 @app.route('/blog')
 def blog():
-    return render_template('blog.html')
+    articulos = list(articulos_collection.find().sort("fecha", -1))  # Más recientes primero
+    return render_template('blog.html', articulos=articulos)
+
+@app.route('/crear_articulo', methods=['POST'])
+def crear_articulo():
+    if not es_admin():
+        flash("Solo los administradores pueden publicar artículos.")
+        return redirect(url_for('blog'))
+
+    titulo = request.form.get('titulo', '').strip()
+    contenido = request.form.get('contenido', '').strip()
+
+    if not titulo or not contenido:
+        flash("Título y contenido obligatorios.")
+        return redirect(url_for('blog'))
+
+    articulo = {
+        "autor": session['usuario'],
+        "titulo": titulo,
+        "contenido": contenido,
+        "fecha": datetime.now().strftime('%Y-%m-%d %H:%M')
+    }
+
+    articulos_collection.insert_one(articulo)
+    flash("Artículo publicado correctamente.")
+    return redirect(url_for('blog'))
+@app.route('/editar_articulo/<id>', methods=['GET', 'POST'])
+def editar_articulo(id):
+    if not es_admin():
+        return "Acceso no autorizado", 403
+
+    articulo = articulos_collection.find_one({"_id": ObjectId(id)})
+
+    if not articulo:
+        return "Artículo no encontrado", 404
+
+    if request.method == 'POST':
+        nuevo_titulo = request.form.get('titulo', '').strip()
+        nuevo_contenido = request.form.get('contenido', '').strip()
+
+        if not nuevo_titulo or not nuevo_contenido:
+            flash("Todos los campos son obligatorios.")
+            return redirect(url_for('editar_articulo', id=id))
+
+        articulos_collection.update_one(
+            {"_id": ObjectId(id)},
+            {"$set": {
+                "titulo": nuevo_titulo,
+                "contenido": nuevo_contenido
+            }}
+        )
+        flash("Artículo actualizado correctamente.")
+        return redirect(url_for('blog'))
+
+    return render_template('editar_articulo.html', articulo=articulo)
+
+@app.route('/eliminar_articulo/<id>', methods=['POST'])
+def eliminar_articulo(id):
+    if not es_admin():
+        return "Acceso no autorizado", 403
+
+    articulos_collection.delete_one({"_id": ObjectId(id)})
+    flash("Artículo eliminado.")
+    return redirect(url_for('blog'))
+
 
 @app.route('/herramientas')
 def herramientas():
@@ -233,7 +296,7 @@ def redirigir_discord():
     if not url_web:
         return "URL no proporcionada", 400
 
-    # Convierte el enlace a intento de abrir la app de Discord
+
     url_app = url_web.replace("https://", "discord://")
 
     html = f"""

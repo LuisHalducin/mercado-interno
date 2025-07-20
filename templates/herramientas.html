@@ -6,8 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='style_principal.css') }}">
+
+  <!-- Aquí puedes agregar los estilos de la calculadora (estilo.css) -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilo_scb.css') }}">
+
+  <!-- Select2 y Toastify (si usas esos) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
 </head>
-<!-- Barra de pestañas -->
+<body>
+
   <nav class="barra-pestanas">
     <ul>
       <li><a href="{{ url_for('principal') }}">Inicio</a></li>
@@ -18,24 +27,98 @@
     </ul>
   </nav>
 
-<body>
-
   <header>
     <h1>TRINITYX</h1>
     <p>Alianza de jugadores en Sim Companies</p>
   </header>
 
-  
   <main class="contenedor">
-    <section class="mensaje-en-construccion">
-      <h2>🛠️ Sección en construcción</h2>
-      <p>Seguimos trabajando para traerte esta función pronto.</p>
+    <!-- Aquí se inserta la calculadora -->
+    <section id="calculadora-simbuild">
+      <h2>Sim Building Calculator</h2>
+      <p>Calculadora para Simbuild: optimiza tus cálculos y estrategias fácilmente.</p>
+
+      <div class="main-container">
+        <div class="form-container">
+          <label for="buildingName">Select the name of the building:</label>
+          <select id="buildingName" name="buildingName">
+            <option value="edificio1">Farm</option>
+                <option value="edificio2">Ranch</option>
+                <option value="edificio3">Bakery</option>
+                <option value="edificio4">Beverage Factory</option>
+                <option value="edificio5">Catering</option>
+                <option value="edificio6">Food Processing Plant</option>
+                <option value="edificio7">Mill</option>
+                <option value="edificio8">Slaughterhouse</option>
+                <option value="edificio9">Concrete Plant</option>
+                <option value="edificio10">Construction Factory</option>
+                <option value="edificio11">General Contractor</option>
+                <option value="edificio12">Quarry</option>
+                <option value="edificio13">Fashion Factory</option>
+                <option value="edificio14">Oil Rig</option>
+                <option value="edificio15">Power Plant</option>
+                <option value="edificio16">Refinery</option>
+                <option value="edificio17">Aerospace Electronics</option>
+                <option value="edificio18">Electronics Factory</option>
+                <option value="edificio19">Car Factory</option>
+                <option value="edificio20">Propulsion Factory</option>
+                <option value="edificio21">Hangar</option>
+                <option value="edificio22">Vertical Integration Facility</option>
+                <option value="edificio23">Factory</option>
+                <option value="edificio24">Mine</option>
+                <option value="edificio25">Shipping Depot</option>
+                <option value="edificio26">Water Reservoir</option>
+                <option value="edificio27">Automotive R&D</option>
+                <option value="edificio28">Breeding Laboratory</option>
+                <option value="edificio29">Chemistry Laboratory</option>
+                <option value="edificio30">Fashion & Design</option>
+                <option value="edificio31">Kitchen</option>
+                <option value="edificio32">Physics Laboratory</option>
+                <option value="edificio33">Plant Research Center</option>
+                <option value="edificio34">Software R&D</option>
+                <option value="edificio35">Launch Pad</option>
+                <option value="edificio36">Grocery Store</option>
+                <option value="edificio37">Electronics Store</option>
+                <option value="edificio38">Hardware Store</option>
+                <option value="edificio39">Gas Station</option>
+                <option value="edificio40">Fashion Store</option>
+                <option value="edificio41">Car Dealership</option>
+                <option value="edificio42">Sales Offices</option>
+                <option value="edificio43">Restaurant</option>
+                <option value="edificio44">Castle</option>
+                <option value="edificio45">Park</option>
+                <option value="edificio46">Lake</option>
+                <option value="edificio47">Bank</option>
+                <option value="edificio48">Aerospace Factory</option>
+          </select>
+          <label for="levelNumber">Number of levels:</label>
+          <input type="number" id="levelNumber" name="levelNumber" min="1" max="50" value="1" />
+          <br />
+          <button id="calcularBtn" onclick="calcularCosto()">Calculate Cost</button>
+        </div>
+
+        <div class="right-container">
+          <img id="buildingImage" src="{{ url_for('static', filename='img/sim-companies.webp') }}" alt="Imagen predeterminada" />
+          <div id="resultSection">
+            <h2 id="result">Construction Cost</h2>
+            <h2 id="timeResult">Construction Time</h2>
+          </div>
+        </div>
+      </div>
     </section>
+
+    <!-- Puedes agregar más secciones de herramientas aquí -->
   </main>
 
   <footer>
     <p>&copy; 2025 Alianza TRINITYX - Sim Companies</p>
   </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+  <script src="{{ url_for('static', filename='js/script_scb.js') }}"></script>
 
 </body>
 </html>

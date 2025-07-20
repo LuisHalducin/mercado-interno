@@ -111,6 +111,7 @@
   {% endwith %}
 
   <form method="POST" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <input type="text" name="nombre" placeholder="Nombre de la compañia" required autocomplete="off" />
     <input type="password" name="contraseña" placeholder="Contraseña" required autocomplete="off" />
     <input type="password" name="contraseña2" placeholder="Confirmar contraseña" required autocomplete="off" />

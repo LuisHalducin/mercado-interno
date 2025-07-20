@@ -2,12 +2,14 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Blog - TRINITYX</title>
+  <title>Mini blog - TRINITYX</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style_principal.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilo_blog.css') }}">
 </head>
-<!-- Barra de pestañas -->
+<body>
+
+  <!-- Barra de navegación -->
   <nav class="barra-pestanas">
     <ul>
       <li><a href="{{ url_for('principal') }}">Inicio</a></li>
@@ -18,19 +20,49 @@
     </ul>
   </nav>
 
-<body>
-
   <header>
-    <h1>TRINITYX</h1>
-    <p>Alianza de jugadores en Sim Companies</p>
+    <h1>Mini Blog - TRINITYX</h1>
+    <p>Artículos de la alianza sobre Sim Companies</p>
   </header>
 
-  
   <main class="contenedor">
-    <section class="mensaje-en-construccion">
-      <h2>🛠️ Sección en construcción</h2>
-      <p>Seguimos trabajando para traerte esta función pronto.</p>
+
+    <!-- Formulario para publicar artículo (solo admin) -->
+    {% if es_admin %}
+    <section class="nuevo-articulo">
+      <h2>📝 Escribir nuevo artículo</h2>
+      <form action="{{ url_for('crear_articulo') }}" method="POST">
+        <input type="text" name="titulo" placeholder="Título del artículo" required><br>
+        <textarea name="contenido" rows="6" placeholder="Escribe aquí tu artículo..." required></textarea><br>
+        <button type="submit">Publicar</button>
+      </form>
     </section>
+    <hr>
+    {% endif %}
+
+    <!-- Lista de artículos -->
+    <section class="lista-articulos">
+      <h2>📚 Artículos recientes</h2>
+      {% for articulo in articulos %}
+        <article class="articulo">
+          <h3>{{ articulo['titulo'] }}</h3>
+          <p>{{ articulo['contenido'] }}</p>
+          <small>Publicado por {{ articulo['autor'] }} el {{ articulo['fecha'] }}</small><br>
+
+          {% if es_admin %}
+          <form action="{{ url_for('eliminar_articulo', id=articulo['_id']) }}" method="POST" style="display:inline;">
+            <button type="submit" onclick="return confirm('¿Eliminar este artículo?')">Eliminar</button>
+          </form>
+          <a href="{{ url_for('editar_articulo', id=articulo['_id']) }}">Editar</a>
+          {% endif %}
+
+          <hr>
+        </article>
+      {% else %}
+        <p>No hay artículos todavía.</p>
+      {% endfor %}
+    </section>
+
   </main>
 
   <footer>

@@ -1,0 +1,217 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body y fuente general */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Contenedor principal */
+.contenedor {
+  max-width: 900px;
+  margin: 20px auto 40px;
+  padding: 0 15px;
+  flex-grow: 1;
+}
+
+/* Barra de navegación */
+.barra-pestanas {
+  background-color: #1e40af;
+  box-shadow: 0 2px 6px rgba(30, 64, 175, 0.3);
+}
+
+.barra-pestanas ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+}
+
+.barra-pestanas ul li {
+  margin: 0 15px;
+}
+
+.barra-pestanas ul li a {
+  color: #f3f4f6;
+  text-decoration: none;
+  padding: 15px 10px;
+  display: inline-block;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.barra-pestanas ul li a:hover,
+.barra-pestanas ul li a.active {
+  color: #a5b4fc;
+  border-bottom: 2px solid #a5b4fc;
+}
+
+/* Header */
+header {
+  text-align: center;
+  padding: 25px 15px;
+  background-color: #e0e7ff;
+  border-radius: 10px;
+  margin: 25px auto 40px;
+  max-width: 900px;
+  box-shadow: 0 3px 10px rgba(30, 64, 175, 0.2);
+}
+
+header h1 {
+  font-size: 2.4rem;
+  color: #1e40af;
+  margin-bottom: 10px;
+}
+
+header p {
+  font-size: 1.1rem;
+  color: #374151;
+}
+
+/* Formulario nuevo artículo */
+.nuevo-articulo {
+  background-color: #ffffff;
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15);
+  margin-bottom: 40px;
+}
+
+.nuevo-articulo h2 {
+  margin-bottom: 20px;
+  color: #1e40af;
+  font-weight: 700;
+}
+
+.nuevo-articulo input,
+.nuevo-articulo textarea {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 18px;
+  border: 1.8px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+}
+
+.nuevo-articulo input:focus,
+.nuevo-articulo textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 8px #6366f1;
+}
+
+.nuevo-articulo button {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.nuevo-articulo button:hover {
+  background-color: #4338ca;
+}
+
+/* Lista de artículos */
+.lista-articulos h2 {
+  margin-bottom: 25px;
+  color: #1e40af;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Artículo individual */
+.articulo {
+  background-color: #fff;
+  padding: 20px 25px;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(30, 64, 175, 0.12);
+  margin-bottom: 30px;
+  transition: box-shadow 0.3s ease;
+}
+
+.articulo:hover {
+  box-shadow: 0 8px 25px rgba(30, 64, 175, 0.2);
+}
+
+.articulo h3 {
+  color: #1e40af;
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+
+.articulo p {
+  font-size: 1rem;
+  margin-bottom: 15px;
+  color: #4b5563;
+  white-space: pre-line; /* para respetar saltos de línea */
+}
+
+.articulo small {
+  color: #6b7280;
+  font-style: italic;
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* Botones eliminar y editar */
+.articulo form,
+.articulo a {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.articulo button {
+  background-color: #ef4444;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.articulo button:hover {
+  background-color: #b91c1c;
+}
+
+.articulo a {
+  background-color: #2563eb;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.articulo a:hover {
+  background-color: #1e40af;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #1e40af;
+  color: white;
+  font-weight: 600;
+  margin-top: auto;
+}

@@ -23,6 +23,7 @@
   {% endwith %}
 
   <form method="POST" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" id="vendedor" name="vendedor" value="{{ session['usuario'] }}" />
 
     <div class="form-group">
