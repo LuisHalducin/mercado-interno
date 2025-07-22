@@ -32,6 +32,17 @@ import threading
 from datetime import timedelta
 from bson import ObjectId
 from flask_wtf import CSRFProtect
+from datetime import datetime
+import os
+import cloudinary
+import cloudinary.uploader
+
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET")
+)
+
 
 app = Flask(__name__)
 csrf = CSRFProtect(app)
@@ -42,7 +53,7 @@ app.permanent_session_lifetime = timedelta(days=7)
 @app.before_request
 def requerir_login():
     session.permanent = True  
-    rutas_libres = ['iniciar', 'static', 'registro']  
+    rutas_libres = ['iniciar', 'static', 'registro', 'crear_articulo']  
     if 'usuario' not in session and request.endpoint not in rutas_libres:
         return redirect(url_for('iniciar'))
 
@@ -212,69 +223,106 @@ def eliminar_compra(compra_id):
 
 @app.route('/blog')
 def blog():
-    articulos = list(articulos_collection.find().sort("fecha", -1))  # Más recientes primero
-    return render_template('blog.html', articulos=articulos)
+    # Traer todos los artículos ordenados del más reciente al más antiguo
+    articulos = list(articulos_collection.find().sort("fecha", -1))
+    if articulos:
+        articulo_principal = articulos[0]
+        articulos_anteriores = articulos[1:]
+    else:
+        articulo_principal = None
+        articulos_anteriores = []
 
-@app.route('/crear_articulo', methods=['POST'])
+    return render_template('blog.html', 
+                           articulo_principal=articulo_principal, 
+                           articulos_anteriores=articulos_anteriores)
+
+@app.route('/blog/<articulo_id>')
+def ver_articulo(articulo_id):
+    articulo = articulos_collection.find_one({"_id": ObjectId(articulo_id)})
+    if not articulo:
+        flash("Artículo no encontrado.")
+        return redirect(url_for('blog'))
+
+    return render_template('ver_articulo.html', articulo=articulo)
+
+
+def es_admin():
+    if 'usuario' not in session:
+        return False
+    usuario = usuarios_collection.find_one({"nombre": session['usuario']})
+    return usuario and usuario.get('rol') == 'admin'
+
+@app.context_processor
+def utility_processor():
+    return dict(es_admin=es_admin)
+
+
+@app.route('/blog/crear', methods=['GET', 'POST'])
 def crear_articulo():
     if not es_admin():
-        flash("Solo los administradores pueden publicar artículos.")
+        flash("No tienes permiso para esta acción.")
         return redirect(url_for('blog'))
-
-    titulo = request.form.get('titulo', '').strip()
-    contenido = request.form.get('contenido', '').strip()
-
-    if not titulo or not contenido:
-        flash("Título y contenido obligatorios.")
-        return redirect(url_for('blog'))
-
-    articulo = {
-        "autor": session['usuario'],
-        "titulo": titulo,
-        "contenido": contenido,
-        "fecha": datetime.now().strftime('%Y-%m-%d %H:%M')
-    }
-
-    articulos_collection.insert_one(articulo)
-    flash("Artículo publicado correctamente.")
-    return redirect(url_for('blog'))
-@app.route('/editar_articulo/<id>', methods=['GET', 'POST'])
-def editar_articulo(id):
-    if not es_admin():
-        return "Acceso no autorizado", 403
-
-    articulo = articulos_collection.find_one({"_id": ObjectId(id)})
-
-    if not articulo:
-        return "Artículo no encontrado", 404
 
     if request.method == 'POST':
-        nuevo_titulo = request.form.get('titulo', '').strip()
-        nuevo_contenido = request.form.get('contenido', '').strip()
+        titulo = request.form.get('titulo', '').strip()
+        contenido = request.form.get('contenido', '').strip()
+        imagen = request.files.get('imagen')  # 📸 obtener imagen
+        print("Imagen recibida:", imagen)
 
-        if not nuevo_titulo or not nuevo_contenido:
+        if not titulo or not contenido:
             flash("Todos los campos son obligatorios.")
-            return redirect(url_for('editar_articulo', id=id))
+            return render_template('crear_articulo.html')
+        
+        url_imagen = None
+        public_id_imagen = None
 
-        articulos_collection.update_one(
-            {"_id": ObjectId(id)},
-            {"$set": {
-                "titulo": nuevo_titulo,
-                "contenido": nuevo_contenido
-            }}
-        )
-        flash("Artículo actualizado correctamente.")
+        if imagen and imagen.filename != '':
+            try:
+                print("Subiendo imagen a Cloudinary...")
+                resultado = cloudinary.uploader.upload(imagen)
+                print("Resultado de Cloudinary:", resultado)
+                url_imagen = resultado.get("secure_url")
+                public_id_imagen = resultado.get("public_id")
+            except Exception as e:
+                flash("Error al subir imagen: " + str(e))
+                return render_template('crear_articulo.html')
+
+        nuevo_articulo = {
+            "titulo": titulo,
+            "contenido": contenido,
+            "autor": session['usuario'],
+            "fecha": datetime.utcnow(),
+            "imagen": url_imagen,
+            "imagen_public_id": public_id_imagen
+        }
+        articulos_collection.insert_one(nuevo_articulo)
+        flash("Artículo creado con éxito.")
         return redirect(url_for('blog'))
 
-    return render_template('editar_articulo.html', articulo=articulo)
+    return render_template('crear_articulo.html')
 
-@app.route('/eliminar_articulo/<id>', methods=['POST'])
-def eliminar_articulo(id):
+@app.route('/blog/eliminar/<articulo_id>', methods=['POST'])
+def eliminar_articulo(articulo_id):
     if not es_admin():
-        return "Acceso no autorizado", 403
+        flash("No tienes permiso para esta acción.")
+        return redirect(url_for('blog'))
 
-    articulos_collection.delete_one({"_id": ObjectId(id)})
-    flash("Artículo eliminado.")
+    articulo = articulos_collection.find_one({"_id": ObjectId(articulo_id)})
+
+    if articulo:
+        public_id = articulo.get("imagen_public_id")
+        if public_id:
+            try:
+                cloudinary.uploader.destroy(public_id)
+                print(f"Imagen con public_id {public_id} eliminada de Cloudinary.")
+            except Exception as e:
+                flash(f"Error al eliminar la imagen en Cloudinary: {e}")
+
+        articulos_collection.delete_one({"_id": ObjectId(articulo_id)})
+        flash("Artículo eliminado con éxito.")
+    else:
+        flash("Artículo no encontrado.")
+
     return redirect(url_for('blog'))
 
 

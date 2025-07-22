@@ -1,73 +1,84 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Mini blog - TRINITYX</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='estilo_blog.css') }}">
+  <meta charset="UTF-8" />
+  <title>Blog</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilo_blog.css') }}" />
 </head>
 <body>
 
-  <!-- Barra de navegación -->
+  {% if session['usuario'] %}
+  <div style="position: absolute; top: 10px; right: 15px; color: #a0d468; font-weight: bold;">
+    {{ session['usuario'] }} |
+    <a href="{{ url_for('cerrar') }}" style="color: #f06292; text-decoration: none;">Cerrar sesión</a>
+  </div>
+  {% else %}
+  <div style="position: absolute; top: 10px; right: 15px;">
+    <a href="{{ url_for('iniciar') }}" style="color: #a0d468; font-weight: bold; margin-right: 10px;">Iniciar sesión</a>
+    <a href="{{ url_for('registro') }}" style="color: #a0d468; font-weight: bold;">Registrarse</a>
+  </div>
+  {% endif %}
+
   <nav class="barra-pestanas">
     <ul>
-      <li><a href="{{ url_for('principal') }}">Inicio</a></li>
-      <li><a href="{{ url_for('blog') }}">Mini blog</a></li>
+      <li><a href="{{ url_for('principal') }}">inicio</a></li>
       <li><a href="{{ url_for('herramientas') }}">Herramientas</a></li>
       <li><a href="{{ url_for('gobierno') }}">Pedidos de Gobierno</a></li>
       <li><a href="{{ url_for('proximamente') }}">Próximamente</a></li>
     </ul>
   </nav>
 
-  <header>
-    <h1>Mini Blog - TRINITYX</h1>
-    <p>Artículos de la alianza sobre Sim Companies</p>
-  </header>
+  <h1>Blog</h1>
 
-  <main class="contenedor">
+  {% if session['usuario'] and es_admin() %}
+    <p><a href="{{ url_for('crear_articulo') }}">+ Nuevo artículo</a></p>
+  {% endif %}
 
-    <!-- Formulario para publicar artículo (solo admin) -->
-    {% if es_admin %}
-    <section class="nuevo-articulo">
-      <h2>📝 Escribir nuevo artículo</h2>
-      <form action="{{ url_for('crear_articulo') }}" method="POST">
-        <input type="text" name="titulo" placeholder="Título del artículo" required><br>
-        <textarea name="contenido" rows="6" placeholder="Escribe aquí tu artículo..." required></textarea><br>
-        <button type="submit">Publicar</button>
+  <section id="articulos-anteriores">
+    <h3>Artículos anteriores</h3>
+    <ul>
+  {% for art in articulos_anteriores %}
+    <li>
+      <a href="{{ url_for('ver_articulo', articulo_id=art._id) }}">{{ art.titulo }}</a>
+      <small>({{ art.fecha.strftime("%d/%m/%Y") }})</small>
+
+      {% if session['usuario'] and es_admin() %}
+      <form action="{{ url_for('eliminar_articulo', articulo_id=art._id) }}" method="post" style="display:inline;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" onclick="return confirm('¿Eliminar este artículo?')">Eliminar</button>
       </form>
-    </section>
-    <hr>
-    {% endif %}
-
-    <!-- Lista de artículos -->
-    <section class="lista-articulos">
-      <h2>📚 Artículos recientes</h2>
-      {% for articulo in articulos %}
-        <article class="articulo">
-          <h3>{{ articulo['titulo'] }}</h3>
-          <p>{{ articulo['contenido'] }}</p>
-          <small>Publicado por {{ articulo['autor'] }} el {{ articulo['fecha'] }}</small><br>
-
-          {% if es_admin %}
-          <form action="{{ url_for('eliminar_articulo', id=articulo['_id']) }}" method="POST" style="display:inline;">
-            <button type="submit" onclick="return confirm('¿Eliminar este artículo?')">Eliminar</button>
-          </form>
-          <a href="{{ url_for('editar_articulo', id=articulo['_id']) }}">Editar</a>
-          {% endif %}
-
-          <hr>
-        </article>
-      {% else %}
-        <p>No hay artículos todavía.</p>
+      {% endif %}
+    </li>
+  {% else %}
+        <li>No hay artículos anteriores.</li>
       {% endfor %}
+    </ul>
+  </section>
+
+  <hr>
+
+  {% if articulo_principal %}
+    <section id="articulo-principal">
+      <h2>{{ articulo_principal.titulo }}</h2>
+
+       {% if articulo_principal.imagen %}
+    <img src="{{ articulo_principal.imagen }}" alt="Imagen del artículo">
+  {% endif %}
+
+      <p><em>Por {{ articulo_principal.autor }} - {{ articulo_principal.fecha.strftime("%d/%m/%Y") }}</em></p>
+      
+      <div>{{ articulo_principal.contenido | safe }}</div>
+
+      {% if session['usuario'] and es_admin() %}
+      <form action="{{ url_for('eliminar_articulo', articulo_id=articulo_principal._id) }}" method="post" style="margin-top: 10px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" onclick="return confirm('¿Eliminar este artículo?')">Eliminar artículo principal</button>
+      </form>
+      {% endif %}
     </section>
-
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Alianza TRINITYX - Sim Companies</p>
-  </footer>
+  {% else %}
+    <p>No hay artículos para mostrar.</p>
+  {% endif %}
 
 </body>
 </html>

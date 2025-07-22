@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Crear Artículo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilo_blog.css') }}" />
+</head>
+<body>
+  <h1>Crear Artículo</h1>
+  <form method="POST" enctype="multipart/form-data">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  
+  <label for="titulo">Título:</label><br>
+  <input type="text" id="titulo" name="titulo" required><br><br>
+
+  <label for="contenido">Contenido:</label><br>
+  <textarea id="contenido" name="contenido" rows="10" cols="50" required></textarea><br><br>
+
+  <label for="imagen">Imagen (opcional):</label><br>
+  <input type="file" id="imagen" name="imagen" accept="image/*"><br><br>
+
+  <button type="submit">Guardar</button>
+</form>
+
+  <a href="{{ url_for('blog') }}">Volver al blog</a>
+</body>
+</html>

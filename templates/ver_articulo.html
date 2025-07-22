@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ articulo.titulo }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilo_blog.css') }}" />
+  <style>
+    .contenedor-articulo {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #32137a;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .contenedor-articulo h1 {
+      text-align: center;
+    }
+
+    .contenedor-articulo p {
+      text-align: center;
+      color: #888;
+    }
+
+    .contenedor-articulo .contenido {
+      margin-top: 20px;
+      line-height: 1.6;
+    }
+
+    .contenedor-articulo form {
+      text-align: right;
+      margin-top: 20px;
+    }
+
+    .contenedor-articulo a {
+      display: block;
+      margin-top: 30px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+  {% if session['usuario'] %}
+  <div style="position: absolute; top: 10px; right: 15px; color: #a0d468; font-weight: bold;">
+    {{ session['usuario'] }} |
+    <a href="{{ url_for('cerrar') }}" style="color: #f06292; text-decoration: none;">Cerrar sesión</a>
+  </div>
+  {% else %}
+  <div style="position: absolute; top: 10px; right: 15px;">
+    <a href="{{ url_for('iniciar') }}" style="color: #a0d468; font-weight: bold; margin-right: 10px;">Iniciar sesión</a>
+    <a href="{{ url_for('registro') }}" style="color: #a0d468; font-weight: bold;">Registrarse</a>
+  </div>
+  {% endif %}
+
+  <nav class="barra-pestanas">
+    <ul>
+      <li><a href="{{ url_for('principal') }}">Inicio</a></li>
+      <li><a href="{{ url_for('herramientas') }}">Herramientas</a></li>
+      <li><a href="{{ url_for('gobierno') }}">Pedidos de Gobierno</a></li>
+      <li><a href="{{ url_for('proximamente') }}">Próximamente</a></li>
+      <li><a href="{{ url_for('blog') }}">Blog</a></li>
+    </ul>
+  </nav>
+
+  <div class="contenedor-articulo">
+  <h1>{{ articulo.titulo }}</h1>
+
+  {% if articulo.imagen %}
+    <img src="{{ articulo.imagen }}" alt="Imagen del artículo" style="max-width: 100%; height: auto; margin-bottom: 15px;">
+  {% endif %}
+
+  <p><em>Por {{ articulo.autor }} - {{ articulo.fecha.strftime('%d/%m/%Y') }}</em></p>
+
+  <div class="contenido">
+    {{ articulo.contenido | safe }}
+  </div>
+
+  {% if session['usuario'] and es_admin() %}
+  <form action="{{ url_for('eliminar_articulo', articulo_id=articulo._id) }}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" onclick="return confirm('¿Eliminar este artículo?')">Eliminar</button>
+  </form>
+  {% endif %}
+
+  <a href="{{ url_for('blog') }}">← Volver al blog</a>
+</div>
+
+
+</body>
+</html>
