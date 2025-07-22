@@ -211,75 +211,7 @@ hr {
     margin-left: 5px;
 }
 
-/* =====================
-   ESTILOS PARA CREAR ARTÍCULO
-===================== */
 
-.formulario-crear {
-    background: #2c3e50;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 12px rgba(0,0,0,0.4);
-    text-align: left;
-}
-
-.formulario-crear h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #00bcd4;
-}
-
-.formulario-crear label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #ffd54f;
-}
-
-.formulario-crear input[type="text"],
-.formulario-crear textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    margin-bottom: 20px;
-    background: #34495e;
-    color: #f0f0f0;
-    font-size: 1em;
-}
-
-.formulario-crear textarea {
-    resize: vertical;
-}
-
-.formulario-crear button {
-    background: #00bcd4;
-    border: none;
-    padding: 10px 20px;
-    color: #1e1e2f;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.formulario-crear button:hover {
-    background: #4dd0e1;
-}
-
-.formulario-crear a {
-    display: inline-block;
-    margin-top: 20px;
-    color: #a0d468;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.formulario-crear a:hover {
-    text-decoration: underline;
-}
 
 #articulo-principal img {
     max-width: 70%;
@@ -329,19 +261,26 @@ hr {
         font-size: 1.4em;
         text-align: center;
     }
+    
 
-    .barra-pestanas ul {
-        flex-direction: column;
-        gap: 10px;
-        align-items: center;
-    }
+    /* 🔽 NUEVO: barra-pestanas responsiva */
+  /* Permitir scroll horizontal en pantallas pequeñas */
+.barra-pestanas {
+    overflow-x: auto;
+    white-space: nowrap;
+}
 
-    .barra-pestanas a {
-        display: block;
-        padding: 10px;
-        width: 100%;
-        text-align: center;
-    }
+/* Asegurarse de que los <ul> no se salgan */
+.barra-pestanas ul {
+    display: inline-flex;
+    padding: 0 10px;
+    min-width: max-content;
+}
+
+/* Ajustar los <li> para que no se encojan ni se escondan */
+.barra-pestanas li {
+    flex: 0 0 auto;
+}
 
     #articulos-anteriores li {
         flex-direction: column;
